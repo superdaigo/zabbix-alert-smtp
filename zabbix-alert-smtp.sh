@@ -10,12 +10,13 @@ from email.MIMEText import MIMEText
 from email.Header import Header
 from email.Utils import formatdate
 
-# Create your own settings.py
-from settings import (SENDER_EMAIL, SMTP_USERNAME, SMTP_PASSWORD, SMTP_SERVER,
-                      SMTP_PORT, SENDER_NAME, SMTP_SSL_TYPE)
-# You can create your own settings.py
-# or commentout above import and define these variables here.
-example = """# settings.py - zabbix-alert-smtp
+try:
+    from settings import (SENDER_EMAIL, SMTP_USERNAME, SMTP_PASSWORD, SMTP_SERVER,
+                          SMTP_PORT, SENDER_NAME, SMTP_SSL_TYPE)
+except ImportError as e:
+    pass
+
+SETTINGS_EXAMPLE = """# settings.py - zabbix-alert-smtp
 
 # Mail Account
 SENDER_NAME = u'Zabbix Alert'
@@ -42,6 +43,14 @@ SMTP_SSL_TYPE = SMTP_TLS
 #
 # # SSL Type ('SMTP_TLS': Gmail, 'SMTP_SSL': SES, None: no SSL)
 # SMTP_SSL_TYPE = SMTP_SSL
+"""
+
+SETTINGS_ERROR = """Create your own settings.py file and edit it.
+    $ ./zabbix-alert-smtp.sh example > settings.py
+"""
+
+ARGUMENT_ERROR = """requires 3 parameters (recipient, subject, body)
+    $ zabbix-alert-smtp.sh recipient subject body
 """
 
 def send_mail(recipient, subject, body, encoding='utf-8'):
@@ -75,15 +84,16 @@ if __name__ == '__main__':
     subject = sys.argv[2]
     body = sys.argv[3]
     """
-    if len(sys.argv) == 4:
-        send_mail(
-            recipient=sys.argv[1],
-            subject=sys.argv[2],
-            body=sys.argv[3])
-    elif (len(sys.argv) == 2 and 
-            sys.argv[1] == 'example'):
-        print example
+    try:
+        SENDER_EMAIL
+    except:
+        print SETTINGS_ERROR
     else:
-        print u"""requires 3 parameters (recipient, subject, body)
-\t$ zabbix-alert-smtp.sh recipient subject body
-"""
+        if len(sys.argv) == 4:
+            send_mail(recipient=sys.argv[1],
+                      subject=sys.argv[2],
+                      body=sys.argv[3])
+        elif (len(sys.argv) == 2 and sys.argv[1] == 'example'):
+            print SETTINGS_EXAMPLE
+        else:
+            print ARGUMENT_ERROR
