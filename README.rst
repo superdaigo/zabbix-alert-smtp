@@ -5,6 +5,9 @@
 This script enables the zabbix to send alert email via SMTP with tls.
 (ie. Gmail, Amazon SES)
 
+.. image:: https://coveralls.io/repos/github/superdaigo/zabbix-alert-smtp/badge.svg?branch=master :target: https://coveralls.io/github/superdaigo/zabbix-alert-smtp?branch=master
+
+
 Requirements
 ------------
 
