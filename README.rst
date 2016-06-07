@@ -42,3 +42,4 @@ Setup Zabbix Media
 
 Follow zabbix documents to create custom media.
 https://www.zabbix.com/documentation/2.0/manual/config/notifications/media/script
+
